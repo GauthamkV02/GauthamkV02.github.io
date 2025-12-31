@@ -19,3 +19,39 @@ body{margin:0;padding:0;background:#ffe;font-size:12px;overflow:auto}
 #copyright a{color:#666}
 #icon{font-size: 48px;color: red;margin: 50 px; align-content: center;}
 #heartspan{align-content: center;text-align: center;margin: 20px;}
+/* Mobile-friendly layout */
+@media(max-width: 768px) {
+    #code, #loveHeart {
+        float: none;
+        width: 90% !important;
+        max-width: 440px;
+        margin: 0 auto 20px auto;
+    }
+
+    #loveHeart {
+        height: auto !important;
+    }
+
+    #garden {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    #words {
+        width: 100% !important;
+        font-size: 20px !important;
+    }
+
+    #loveu {
+        margin-right: auto !important;
+        margin-left: auto !important;
+        text-align: center !important;
+    }
+
+    #heartspan {
+        text-align: center !important;
+        margin: 20px auto !important;
+        display: block;
+    }
+}
+
