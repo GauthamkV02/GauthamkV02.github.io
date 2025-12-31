@@ -1,12 +1,9 @@
-var gardenCtx, gardenCanvas, garden;
+var garden;
 
+// Initialize Garden
 $(function () {
-  var $loveHeart = $("#loveHeart");
   gardenCanvas = document.getElementById("garden");
-  gardenCanvas.width = $loveHeart.width();
-  gardenCanvas.height = $loveHeart.height();
   gardenCtx = gardenCanvas.getContext("2d");
-  gardenCtx.globalCompositeOperation = "lighter";
   garden = new Garden(gardenCtx, gardenCanvas);
 
   setInterval(function () {
@@ -14,8 +11,7 @@ $(function () {
   }, Garden.options.growSpeed);
 });
 
-/* BLOOM BURST */
-
+// BLOOM BURST
 function startBloomBurst() {
   var blooms = 0;
   var burst = setInterval(function () {
@@ -31,19 +27,17 @@ function startBloomBurst() {
   }, 40);
 }
 
-/* TRANSITION TO HEART */
-
+// TRANSITION TO HEART
 function transitionToHeart() {
-  fadeOutBlooms();              // fade random blooms
-  setTimeout(startHeartAnimation, 1200); // heart blooms along original shape
+  fadeOutBlooms();
+  setTimeout(startHeartAnimation, 1200);
 }
 
-/* HEART BLOOM FROM ORIGINAL ANIMATION */
-
+// HEART BLOOM
 function startHeartAnimation() {
-  var interval = 50;
   var angle = 10;
   var heart = [];
+  var maxAngle = 50;
 
   var animationTimer = setInterval(function () {
     var bloom = getHeartPoint(angle);
@@ -63,17 +57,16 @@ function startHeartAnimation() {
       garden.createRandomBloom(bloom[0], bloom[1]);
     }
 
-    if (angle >= 30) { // full heart
+    if (angle >= maxAngle) {
       clearInterval(animationTimer);
-      showMessages(); // show New Year message
+      showMessages();
     } else {
-      angle += 0.2;
+      angle += 0.3;
     }
-  }, interval);
+  }, 30);
 }
 
-/* FADE BLOOMS */
-
+// FADE RANDOM BLOOMS
 function fadeOutBlooms() {
   var alpha = 1;
   var fade = setInterval(function () {
@@ -86,16 +79,14 @@ function fadeOutBlooms() {
   }, 50);
 }
 
-/* SHOW MESSAGES */
-
+// SHOW MESSAGES
 function showMessages() {
   $("#messages").fadeIn(2000, function () {
     $("#loveu").fadeIn(2000);
   });
 }
 
-/* TIMER */
-
+// TIMER
 function timeElapse(date) {
   var current = Date();
   var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
@@ -115,4 +106,12 @@ function timeElapse(date) {
     "<span class='digit'>" + minutes + "</span> mins " +
     "<span class='digit'>" + Math.floor(seconds) + "</span> secs"
   );
+}
+
+// HEART POINTS
+function getHeartPoint(angle) {
+  var t = angle / Math.PI;
+  var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
+  var y = -20 * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+  return [offsetX + x, offsetY + y];
 }
