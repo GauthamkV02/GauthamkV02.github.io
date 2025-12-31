@@ -1,5 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
 <title>Happy New Year ❤️</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="css/default.css">
@@ -16,31 +19,10 @@
 </head>
 
 <body>
-
 <div id="mainDiv">
   <div id="content">
-
     <div id="loveHeart">
       <canvas id="garden"></canvas>
-
-      <!-- KISS SCENE -->
-      <div id="kissScene">
-        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
-          <path id="man"
-            d="M180 220
-               Q210 180 240 170
-               Q270 160 290 180
-               Q275 185 265 200
-               Q250 220 220 235 Z"/>
-
-          <path id="woman"
-            d="M420 220
-               Q390 180 360 170
-               Q330 160 310 180
-               Q325 185 335 200
-               Q350 220 380 235 Z"/>
-        </svg>
-      </div>
 
       <div id="words">
         <div id="messages">
@@ -56,24 +38,25 @@
           <div class="signature">– Gauthu</div>
         </div>
       </div>
-
     </div>
-
   </div>
 </div>
 
 <script>
+var offsetX = $("#loveHeart").width() / 2;
+var offsetY = $("#loveHeart").height() / 2 - 55;
+
+// Set countdown to Jan 1, 2025
 var together = new Date();
-together.setFullYear(2024, 11, 31); // Set to 31 Dec 2024 midnight
-together.setHours(23,59,59,0);
+together.setFullYear(2025, 0, 1);
+together.setHours(0,0,0,0);
 
-setTimeout(startBloomBurst, 1200);
+// Start bloom burst after 1 second
+setTimeout(startBloomBurst, 1000);
 
+// Timer
 timeElapse(together);
-setInterval(function () {
-  timeElapse(together);
-}, 500);
+setInterval(function () { timeElapse(together); }, 500);
 </script>
-
 </body>
 </html>
