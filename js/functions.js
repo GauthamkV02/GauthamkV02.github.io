@@ -1,110 +1,118 @@
-var garden, gardenCtx, gardenCanvas;
+var gardenCtx, gardenCanvas, garden;
 
 $(function () {
+  var $loveHeart = $("#loveHeart");
+  gardenCanvas = document.getElementById("garden");
+  gardenCanvas.width = $loveHeart.width();
+  gardenCanvas.height = $loveHeart.height();
+  gardenCtx = gardenCanvas.getContext("2d");
+  gardenCtx.globalCompositeOperation = "lighter";
+  garden = new Garden(gardenCtx, gardenCanvas);
 
-	var $loveHeart = $("#loveHeart");
-	var offsetX = $loveHeart.width() / 2;
-	var offsetY = $loveHeart.height() / 2;
-
-	gardenCanvas = $("#garden")[0];
-	gardenCanvas.width = $loveHeart.width();
-	gardenCanvas.height = $loveHeart.height();
-
-	gardenCtx = gardenCanvas.getContext("2d");
-	gardenCtx.globalCompositeOperation = "lighter";
-
-	garden = new Garden(gardenCtx, gardenCanvas);
-
-	setInterval(function () {
-		garden.render();
-	}, Garden.options.growSpeed);
-
-	adjustCodePosition();
-	$("#code").typewriter();
-
-	setTimeout(startNewYearSequence, 3000);
-
+  setInterval(function () {
+    garden.render();
+  }, Garden.options.growSpeed);
 });
 
-/* -------- TYPEWRITER -------- */
+/* BLOOM BURST */
 
-(function ($) {
-	$.fn.typewriter = function () {
-		this.each(function () {
-			var $el = $(this),
-				text = $el.html(),
-				progress = 0;
-			$el.html("");
-			var timer = setInterval(function () {
-				var char = text.substr(progress, 1);
-				if (char === "<") progress = text.indexOf(">", progress) + 1;
-				else progress++;
-				$el.html(text.substring(0, progress) + (progress & 1 ? "_" : ""));
-				if (progress >= text.length) clearInterval(timer);
-			}, 75);
-		});
-		return this;
-	};
-})(jQuery);
+function startBloomBurst() {
+  var blooms = 0;
+  var burst = setInterval(function () {
+    var x = Math.random() * gardenCanvas.width;
+    var y = Math.random() * gardenCanvas.height;
+    garden.createRandomBloom(x, y);
+    blooms++;
 
-/* -------- NEW YEAR ANIMATION -------- */
-
-function startNewYearSequence() {
-	let count = 5;
-	$("#messages").show().text(count);
-
-	let timer = setInterval(function () {
-		$("#messages").text(count--);
-		if (count < 0) {
-			clearInterval(timer);
-			$("#messages").html("🎉 HAPPY NEW YEAR 🎉");
-			flash();
-			bloomBurst(centerX(), centerY(), 4);
-			skyBurst(10);
-			$("#loveu").fadeIn(4000);
-		}
-	}, 1000);
+    if (blooms > 120) {
+      clearInterval(burst);
+      transitionToHeart();
+    }
+  }, 40);
 }
 
-function bloomBurst(x, y, layers) {
-	for (let l = 0; l < layers; l++) {
-		setTimeout(() => {
-			for (let i = 0; i < Garden.randomInt(20, 35); i++) {
-				let a = Math.random() * Math.PI * 2;
-				let r = Garden.random(20, 140);
-				garden.createRandomBloom(
-					x + Math.cos(a) * r,
-					y + Math.sin(a) * r
-				);
-			}
-		}, l * 200);
-	}
+/* TRANSITION TO HEART */
+
+function transitionToHeart() {
+  fadeOutBlooms();              // fade random blooms
+  setTimeout(startHeartAnimation, 1200); // heart blooms along original shape
 }
 
-function skyBurst(times) {
-	for (let i = 0; i < times; i++) {
-		setTimeout(() => {
-			bloomBurst(
-				Garden.random(80, gardenCanvas.width - 80),
-				Garden.random(80, gardenCanvas.height - 80),
-				3
-			);
-		}, i * 450);
-	}
+/* HEART BLOOM FROM ORIGINAL ANIMATION */
+
+function startHeartAnimation() {
+  var interval = 50;
+  var angle = 10;
+  var heart = [];
+
+  var animationTimer = setInterval(function () {
+    var bloom = getHeartPoint(angle);
+    var draw = true;
+
+    for (var i = 0; i < heart.length; i++) {
+      var p = heart[i];
+      var distance = Math.sqrt(Math.pow(p[0] - bloom[0], 2) + Math.pow(p[1] - bloom[1], 2));
+      if (distance < Garden.options.bloomRadius.max * 1.3) {
+        draw = false;
+        break;
+      }
+    }
+
+    if (draw) {
+      heart.push(bloom);
+      garden.createRandomBloom(bloom[0], bloom[1]);
+    }
+
+    if (angle >= 30) { // full heart
+      clearInterval(animationTimer);
+      showMessages(); // show New Year message
+    } else {
+      angle += 0.2;
+    }
+  }, interval);
 }
 
-function flash() {
-	gardenCtx.fillStyle = "rgba(255,255,255,0.15)";
-	gardenCtx.fillRect(0, 0, gardenCanvas.width, gardenCanvas.height);
+/* FADE BLOOMS */
+
+function fadeOutBlooms() {
+  var alpha = 1;
+  var fade = setInterval(function () {
+    alpha -= 0.02;
+    gardenCtx.globalAlpha = alpha;
+    if (alpha <= 0.05) {
+      clearInterval(fade);
+      gardenCtx.globalAlpha = 1;
+    }
+  }, 50);
 }
 
-function centerX() { return gardenCanvas.width / 2; }
-function centerY() { return gardenCanvas.height / 2; }
+/* SHOW MESSAGES */
 
-/* -------- LAYOUT -------- */
+function showMessages() {
+  $("#messages").fadeIn(2000, function () {
+    $("#loveu").fadeIn(2000);
+  });
+}
 
-function adjustCodePosition() {
-	$("#code").css("margin-top",
-		($("#garden").height() - $("#code").height()) / 2
-	);
+/* TIMER */
+
+function timeElapse(date) {
+  var current = Date();
+  var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
+
+  var days = Math.floor(seconds / (3600 * 24));
+  seconds %= 3600 * 24;
+
+  var hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+
+  var minutes = Math.floor(seconds / 60);
+  seconds %= 60;
+
+  $("#elapseClock").html(
+    "<span class='digit'>" + days + "</span> days " +
+    "<span class='digit'>" + hours + "</span> hrs " +
+    "<span class='digit'>" + minutes + "</span> mins " +
+    "<span class='digit'>" + Math.floor(seconds) + "</span> secs"
+  );
 }
