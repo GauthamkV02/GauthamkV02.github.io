@@ -25,13 +25,39 @@
   src: url('digital-7_mono.ttf') format("truetype");
 }
 </style>
+
+<script>
+// Typewriter effect (original)
+(function($) {
+  $.fn.typewriter = function() {
+    this.each(function() {
+      var $ele = $(this), str = $ele.html(), progress = 0;
+      $ele.html('');
+      var timer = setInterval(function() {
+        var current = str.substr(progress, 1);
+        if (current == '<') {
+          progress = str.indexOf('>', progress) + 1;
+        } else {
+          progress++;
+        }
+        $ele.html(str.substring(0, progress) + (progress & 1 ? '_' : ''));
+        if (progress >= str.length) {
+          clearInterval(timer);
+        }
+      }, 75);
+    });
+    return this;
+  };
+})(jQuery);
+</script>
+
 </head>
 
 <body>
 
 <div id="mainDiv">
   <div id="content">
-    <!-- Code block -->
+    <!-- Code block with typewriter -->
     <div id="code">
       <span class="comments">/**</span><br>
       <span class="space"></span><span class="comments">* HAPPY NEW YEAR MESSAGE</span><br>
@@ -80,13 +106,14 @@ if (!document.createElement('canvas').getContext) {
   $("#code").hide();
 } else {
   setTimeout(function () {
-    // Burst starts automatically in functions.js
+    startBloomBurst(); // Burst starts automatically
   }, 1000);
 
   // Countdown
   timeElapse(newYear);
   setInterval(function () { timeElapse(newYear); }, 500);
 
+  // Start typewriter animation
   $("#code").typewriter();
 }
 </script>
