@@ -66,15 +66,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  #loveu {
-    font-size: 18px;
-  }
-
-  #messages {
-    font-size: 24px;
-  }
-
-  #elapseClock .digit {
-    font-size: 24px;
-  }
+  #loveu { font-size: 18px; }
+  #messages { font-size: 24px; }
+  #elapseClock .digit { font-size: 24px; }
 }
