@@ -1,66 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Happy New Year ❤️</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Happy New Year 2025!</title>
 
-<link rel="stylesheet" href="css/default.css">
+<!-- Font Awesome for heart icon -->
+<script src="https://kit.fontawesome.com/a14ae32021.js" crossorigin="anonymous"></script>
+
+<!-- Custom CSS -->
+<link href="css/default.css" rel="stylesheet">
+
+<!-- jQuery -->
 <script src="js/jquery.js"></script>
+
+<!-- Garden animation script -->
 <script src="js/garden.js"></script>
+
+<!-- Custom functions (burst + heart + countdown) -->
 <script src="js/functions.js"></script>
 
 <style>
 @font-face {
   font-family: digit;
-  src: url('digital-7_mono.ttf');
+  src: url('digital-7_mono.ttf') format("truetype");
 }
 </style>
 </head>
 
 <body>
+
 <div id="mainDiv">
   <div id="content">
+    <!-- Code block -->
+    <div id="code">
+      <span class="comments">/**</span><br>
+      <span class="space"></span><span class="comments">* HAPPY NEW YEAR MESSAGE</span><br>
+      <span class="space"></span><span class="comments">*/</span><br>
+      Hey there!<br>
+      Wishing you a <strong>Happy New Year 2025!</strong><br>
+      May this year bring joy, laughter, and success.<br>
+      <br>
+      <span id="heartspan">
+        <a href="#"><i class="fas fa-heart" id="icon"></i></a>
+      </span>
+    </div>
+
+    <!-- Heart animation canvas -->
     <div id="loveHeart">
       <canvas id="garden"></canvas>
-
       <div id="words">
         <div id="messages">
-          HELLO 2025 ✨
+          CHEERS TO 2025!
           <div id="elapseClock"></div>
         </div>
         <div id="loveu">
-          Another year. Same us.<br/>
-          Here’s to more laughs, late nights, <br/>
-          and choosing each other every day.<br/><br/>
-          May this year bring joy, love, and unforgettable memories.<br/>
-          Happy New Year! 🎉
-          <div class="signature">– Gauthu</div>
+          HAPPY NEW YEAR<br/>
+          <div class="signature">- With Love</div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
-var gardenCanvas = document.getElementById("garden");
-var gardenCtx = gardenCanvas.getContext("2d");
-gardenCanvas.width = $("#loveHeart").width();
-gardenCanvas.height = $("#loveHeart").height();
-var offsetX = gardenCanvas.width / 2;
-var offsetY = gardenCanvas.height / 2 - 55;
+var offsetX = $("#loveHeart").width() / 2;
+var offsetY = $("#loveHeart").height() / 2 - 55;
 
-// Set countdown to Jan 1, 2025
-var together = new Date();
-together.setFullYear(2025, 0, 1);
-together.setHours(0,0,0,0);
+// Countdown reference date
+var newYear = new Date();
+newYear.setFullYear(2025, 0, 1);
+newYear.setHours(0,0,0,0);
 
-// Start bloom burst
-setTimeout(startBloomBurst, 1000);
+if (!document.createElement('canvas').getContext) {
+  var msg = document.createElement("div");
+  msg.id = "errorMsg";
+  msg.innerHTML = "Your browser doesn't support HTML5 canvas!";
+  document.body.appendChild(msg);
+  $("#code").hide();
+} else {
+  setTimeout(function () {
+    // Burst starts automatically in functions.js
+  }, 1000);
 
-// Timer
-timeElapse(together);
-setInterval(function () { timeElapse(together); }, 500);
+  // Countdown
+  timeElapse(newYear);
+  setInterval(function () { timeElapse(newYear); }, 500);
+
+  $("#code").typewriter();
+}
 </script>
+
 </body>
 </html>
