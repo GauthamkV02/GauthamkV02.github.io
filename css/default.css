@@ -65,43 +65,7 @@ body {
   font-style: italic;
 }
 
-/* KISS SCENE */
-
-#kissScene {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  z-index: 3;
-  pointer-events: none;
-  transition: opacity 2s ease;
-}
-
-#kissScene svg {
-  width: 85%;
-  max-width: 500px;
-}
-
-#kissScene path {
-  fill: #222;
-  transition: transform 2.5s ease;
-}
-
-#kissScene.active #man {
-  transform: translateX(45px);
-}
-
-#kissScene.active #woman {
-  transform: translateX(-45px);
-}
-
 @media (max-width: 768px) {
-  #kissScene svg {
-    width: 95%;
-  }
-
   #loveu {
     font-size: 18px;
   }
